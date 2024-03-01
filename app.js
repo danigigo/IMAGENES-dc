@@ -1,5 +1,4 @@
 const apiKey = '42648166-259288aeaee40cc4d47cd1479'; // Reemplaza 'TU_API_KEY' con tu propia clave de API de Pixabay
-
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
 const imageContainer = document.getElementById('imageContainer');
@@ -13,12 +12,24 @@ let currentPage = 1;
 let currentSearch = '';
 const imagesPerPage = 21; // Número de imágenes por página
 
-searchButton.addEventListener('click', () => {
+// Event listener para detectar la tecla "Enter"
+searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        performSearch();
+    }
+});
+
+// Event listener para el botón de búsqueda
+searchButton.addEventListener('click', performSearch);
+
+// Función para realizar la búsqueda
+function performSearch() {
     currentSearch = searchInput.value.trim();
     currentPage = 1;
     fetchImages(currentSearch, currentPage);
-});
+}
 
+// Event listener para la paginación
 prevPageButton.addEventListener('click', () => {
     if (currentPage > 1) {
         currentPage--;
@@ -31,6 +42,7 @@ nextPageButton.addEventListener('click', () => {
     fetchImages(currentSearch, currentPage);
 });
 
+// Event listener para abrir la imagen en la modal
 imageContainer.addEventListener('click', e => {
     if (e.target.tagName === 'IMG') {
         const imageUrl = e.target.src;
@@ -39,6 +51,7 @@ imageContainer.addEventListener('click', e => {
     }
 });
 
+// Event listener para cerrar la modal
 closeLightbox.addEventListener('click', () => {
     lightbox.style.display = 'none';
 });
@@ -49,6 +62,7 @@ window.addEventListener('click', e => {
     }
 });
 
+// Función para obtener las imágenes de la API de Pixabay
 async function fetchImages(query, page) {
     const url = `https://pixabay.com/api/?key=${apiKey}&q=${query}&page=${page}&per_page=${imagesPerPage}`;
     try {
@@ -60,6 +74,7 @@ async function fetchImages(query, page) {
     }
 }
 
+// Función para mostrar las imágenes en el contenedor
 function displayImages(images) {
     imageContainer.innerHTML = '';
     images.forEach(image => {
